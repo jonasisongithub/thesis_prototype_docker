@@ -5,13 +5,12 @@ import time
 import json
 from datetime import datetime
 import os
-from streamlit.navigation import switch_page #type: ignore
 
 # WICHTIG: Prüfung, ob die Session-Variablen existieren.
 # Wenn nicht, wird der Nutzer zur Startseite zurückgeleitet.
 if "name" not in st.session_state or st.session_state.name == "":
     # Je nachdem, wie deine Startseite heißt. app.py ist der Standard.
-    switch_page("app.py")
+    st.switch_page("app.py")
 
 
 # Import all necessary functions

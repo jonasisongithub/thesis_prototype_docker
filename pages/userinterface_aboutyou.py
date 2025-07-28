@@ -4,7 +4,6 @@ import sys
 import os
 import time
 import json
-from streamlit.navigation import switch_page # type: ignore
 
 
 # Modul-Pfad erweitern für Zugriff auf rag.py
@@ -218,5 +217,5 @@ if st.session_state["ladephase_abgeschlossen"]:
 
     st.markdown('<div class="centered-button red-button" style="margin-top: 5vh; margin-bottom: 100vh;">', unsafe_allow_html=True)
     if st.button("Zustimmen"):
-        switch_page("pages/userinterface_interview.py")
+        st.switch_page("pages/userinterface_interview.py")
     st.markdown('</div>', unsafe_allow_html=True)
