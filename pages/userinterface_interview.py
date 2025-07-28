@@ -5,6 +5,14 @@ import time
 import json
 from datetime import datetime
 import os
+from streamlit.navigation import switch_page
+
+# WICHTIG: Prüfung, ob die Session-Variablen existieren.
+# Wenn nicht, wird der Nutzer zur Startseite zurückgeleitet.
+if "name" not in st.session_state or st.session_state.name == "":
+    # Je nachdem, wie deine Startseite heißt. app.py ist der Standard.
+    switch_page("app.py")
+
 
 # Import all necessary functions
 from prompts import step1_icebreakerquestion, step2_questions, end_conversation, transcript_summary
@@ -266,13 +274,12 @@ if "end_session_triggered" in st.session_state and st.session_state.end_session_
     time.sleep(1)
 
     # store the transcript
-    output_base_path = "/interview_output"
-    transcript_dir = os.path.join(output_base_path, "transcripts")
-    os.makedirs(transcript_dir, exist_ok=True)
+    if not os.path.exists("./output/transcripts"):
+        os.makedirs("./output/transcripts", exist_ok=True)
 
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     transcript_name = st.session_state.get("name", "user")
-    filename = os.path.join(transcript_dir, f"transcript_{current_time}_{transcript_name}.txt")
+    filename = f"./output/transcripts/transcript_{current_time}_{transcript_name}.txt"
 
     with open(filename, "w", encoding="utf-8") as f:
         for message in st.session_state.messages:

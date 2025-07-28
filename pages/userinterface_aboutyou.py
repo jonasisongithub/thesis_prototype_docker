@@ -4,11 +4,12 @@ import sys
 import os
 import time
 import json
+from streamlit.navigation import switch_page
 
 
 # Modul-Pfad erweitern für Zugriff auf rag.py
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from rag import get_context  
+from rag import get_context
 from interview_guideline import generate_interview_guideline
 
 # Seiteneinstellungen
@@ -84,35 +85,12 @@ st.markdown(
         font-size: 18px !important;
         border-radius: 10px !important;
         padding: 0.5em 2em !important;
-    }}
-
-    .button-container {{
-        display: flex;
-        justify-content: center;
-        margin-top: 5vh;
-        margin-bottom: 100vh;
-    }}
-
-    .start-link-button {{
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #cc0000;
-        color: white !important;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 20px;
-        height: 7vh;
         width: 12vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none !important;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease, transform 0.3s ease;
+        height: 7vh;
+        font-weight: bold;
     }}
 
-    .start-link-button:hover {{
+    .red-button button:hover {{
         background-color: #a30000;
         transform: scale(1.03);
     }}
@@ -130,7 +108,7 @@ st.markdown("""
 <h1 class="gema-headline">GEMA Knowledge Share</h1>
 <h2 class="gema-subheadline">Über dich</h2>
 <br>
-<p class="gema-intro">      
+<p class="gema-intro">
 Damit wir dir im Nachgang passende Fragen stellen können, hilft es uns sehr, wenn du uns kurz ein paar Dinge über dich verrätst.
 </p>
 """, unsafe_allow_html=True)
@@ -153,19 +131,17 @@ task = st.text_input("", placeholder="z.B. Mitgliederservice im Second Level Sup
 if "weiter_geklickt" not in st.session_state:
     st.session_state["weiter_geklickt"] = False
     st.session_state["ladephase_abgeschlossen"] = False
-    
+
 
 # Weiter-Button-Verarbeitung
 def handle_continue_click():
     st.session_state["weiter_geklickt"] = True
     with st.spinner("⏳"):
         st.markdown('<p style="color:#3f4249;">Wir bereiten das Interview für dich vor. Dies kann bis zu einer Minute dauern. Bitte habe ein wenig Geduld. Wir freuen uns auf das Interview mit dir!</p>', unsafe_allow_html=True)
-        
-        # Initialisiere context und guideline
+
         context = None
         guideline = None
 
-        # Funktionen für Kontext und Leitfaden aufrufen
         try:
             context = get_context(task)
             print("Retrieval successful", context)
@@ -175,9 +151,8 @@ def handle_continue_click():
             st.session_state["expert_context"] = None
 
         try:
-            # Stelle sicher, dass context vor der Verwendung geprüft wird, falls die vorherige Operation fehlschlug
             if context is not None:
-                guideline = generate_interview_guideline(position, task, context) 
+                guideline = generate_interview_guideline(position, task, context)
                 print("Guideline generation successful", guideline)
                 st.session_state["interview_guideline"] = guideline
             else:
@@ -203,6 +178,7 @@ if not st.session_state["weiter_geklickt"]:
     if st.button("Weiter"):
         if name.strip() and position.strip() and task.strip():
             handle_continue_click()
+            st.rerun() # Wichtig, damit die Seite neu geladen und der untere Teil angezeigt wird
         else:
             st.markdown("""
             <div style="
@@ -219,18 +195,7 @@ if not st.session_state["weiter_geklickt"]:
             </div>
             """, unsafe_allow_html=True)
 else:
-    # Deactivated Button
-    st.markdown("""
-    <button disabled style="
-        background-color: #e0e0e0;
-        color: #a0a0a0;
-        font-size: 18px;
-        border-radius: 10px;
-        padding: 0.5em 2em;
-        border: none;
-        cursor: not-allowed;
-    ">Weiter</button>
-    """, unsafe_allow_html=True)
+    st.button("Weiter", disabled=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -249,8 +214,9 @@ if st.session_state["ladephase_abgeschlossen"]:
             Danke für diese Informationen. Wir nutzen diese Angaben, um die Fragen möglichst gut an dein Expertenthema anzupassen. Bevor wir starten können, benötigen wir deine Erlaubnis, dieses Interview zu transkribieren und die Inhalte weiterzuverwenden, um Wissensartikel daraus erstellen zu können. Wenn du damit einverstanden bist, klicke bitte auf "Zustimmen". Vielen Dank für deine Unterstützung!
         </p>
     </div>
-
-    <div class="button-container">
-        <a href="/userinterface_interview" class="start-link-button">Zustimmen</a>
-    </div>
     """, unsafe_allow_html=True)
+
+    st.markdown('<div class="centered-button red-button" style="margin-top: 5vh; margin-bottom: 100vh;">', unsafe_allow_html=True)
+    if st.button("Zustimmen"):
+        switch_page("pages/userinterface_interview.py")
+    st.markdown('</div>', unsafe_allow_html=True)
