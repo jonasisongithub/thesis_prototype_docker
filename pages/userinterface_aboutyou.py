@@ -4,7 +4,7 @@ import sys
 import os
 import time
 import json
-from streamlit.navigation import switch_page
+from streamlit.navigation import switch_page # type: ignore
 
 
 # Modul-Pfad erweitern für Zugriff auf rag.py

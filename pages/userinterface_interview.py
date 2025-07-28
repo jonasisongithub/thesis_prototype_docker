@@ -5,7 +5,7 @@ import time
 import json
 from datetime import datetime
 import os
-from streamlit.navigation import switch_page
+from streamlit.navigation import switch_page # type: ignore
 
 # WICHTIG: Prüfung, ob die Session-Variablen existieren.
 # Wenn nicht, wird der Nutzer zur Startseite zurückgeleitet.
