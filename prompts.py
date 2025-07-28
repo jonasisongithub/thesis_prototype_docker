@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+from huggingface_hub import hf_hub_download # type: ignore
+from huggingface_hub import InferenceClient # type: ignore
 import streamlit as st # type: ignore
 from google import genai
 from google.genai import types # type: ignore
@@ -15,28 +17,23 @@ print("Config geladen")
 
 
 CHOSEN_MODEL = st.secrets["CHOSEN_MODEL"]
-if 'gemini_access_token' in st.secrets:
-    client = genai.Client(api_key=st.secrets['gemini_access_token'])
-else:
-    st.error("GEMINI_ACCESS_TOKEN nicht in den Secrets gefunden!")
-    client = None
+client = genai.Client(api_key=st.secrets['gemini_access_token'])
 
+def step1_icebreakerquestion():
+    name = st.session_state.get("name")
+    position = st.session_state.get("position")
+    task = st.session_state.get("task")
+    context = st.session_state.get("context")
+    guideline = st.session_state.get("guideline")
 
-def get_interviewer_prompt(name, position, task, context, guideline):
-    """Erstellt den Interviewer-Prompt dynamisch."""
-    return config_interview.ROLE_INTERVIEWER.format(
+    interviewer_prompt = config_interview.ROLE_INTERVIEWER.format(
         name=name,
         position=position,
         task=task,
         context=context,
         guideline=guideline
     )
-
-def step1_icebreakerquestion(name, position, task, context, guideline):
-    if not client: return "Fehler: Gemini Client nicht initialisiert."
-
-    interviewer_prompt = get_interviewer_prompt(name, position, task, context, guideline)
-
+    
     prompt_icebreaker = f"""
     {interviewer_prompt}
 
@@ -57,23 +54,34 @@ def step1_icebreakerquestion(name, position, task, context, guideline):
 
     Begin now.
     """
+    
 
     response = client.models.generate_content(
-        model=CHOSEN_MODEL,
-        contents=prompt_icebreaker,
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=300)),
+    model=CHOSEN_MODEL,
+    contents=prompt_icebreaker,
+    config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
-
+   
     question = response.text
     print("Returned icebreaker question")
     return question
 
 
-def step2_questions(name, position, task, context, guideline, last_user_response, full_chat_history):
-    if not client: return "Fehler: Gemini Client nicht initialisiert."
+def step2_questions(last_user_response, full_chat_history):
+    name = st.session_state.get("name")
+    position = st.session_state.get("position")
+    task = st.session_state.get("task")
+    context = st.session_state.get("context")
+    guideline = st.session_state.get("guideline")
 
-    interviewer_prompt = get_interviewer_prompt(name, position, task, context, guideline)
+    interviewer_prompt = config_interview.ROLE_INTERVIEWER.format(
+        name=name,
+        position=position,
+        task=task,
+        context=context,
+        guideline=guideline
+    )
 
     prompt_question = f"""{interviewer_prompt}
 
@@ -103,23 +111,34 @@ def step2_questions(name, position, task, context, guideline, last_user_response
     **Full Chat History for Context:**
     {full_chat_history}
     """
-
+    
     response = client.models.generate_content(
-        model=CHOSEN_MODEL,
-        contents=prompt_question,
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=300)),
+    model=CHOSEN_MODEL,
+    contents=prompt_question,
+    config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
-
+   
     question = response.text
     print("Returned normal question")
     return question
 
 
-def end_conversation(name, position, task, context, guideline, full_chat_history):
-    if not client: return "Fehler: Gemini Client nicht initialisiert."
 
-    interviewer_prompt = get_interviewer_prompt(name, position, task, context, guideline)
+def end_conversation(full_chat_history):
+    name = st.session_state.get("name")
+    position = st.session_state.get("position")
+    task = st.session_state.get("task")
+    context = st.session_state.get("context")
+    guideline = st.session_state.get("guideline")
+
+    interviewer_prompt = config_interview.ROLE_INTERVIEWER.format(
+        name=name,
+        position=position,
+        task=task,
+        context=context,
+        guideline=guideline
+    )
 
     prompt_ending = f"""{interviewer_prompt}
 
@@ -144,22 +163,24 @@ def end_conversation(name, position, task, context, guideline, full_chat_history
 
     Begin now."""
 
-
+    
     response = client.models.generate_content(
-        model=CHOSEN_MODEL,
-        contents=prompt_ending,
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=300)),
+    model=CHOSEN_MODEL,
+    contents=prompt_ending,
+    config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
-
+   
     question = response.text
     print("Returned last answer")
     return question
 
 
-def transcript_summary(filepath, context, output_path):
-    if not client: return "Fehler: Gemini Client nicht initialisiert."
-
+def transcript_summary(filepath):
+    """
+    Liest ein Transkript, generiert eine Zusammenfassung neuen Wissens 
+    und speichert diese als Markdown-Datei.
+    """
     transcript_content = ""
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
@@ -170,6 +191,8 @@ def transcript_summary(filepath, context, output_path):
     except Exception as e:
         print(f"Fehler beim Lesen der Datei: {e}")
         return
+    
+    context = st.session_state.get("context")
 
     prompt_summary = f"""You are given the transcript of an expert interview. The transcript consists of alternating lines from "ASSISTANT" (the interviewer asking questions) and "USER" (the interviewee responding). The responses from the USER represent the knowledge shared during the conversation.
 
@@ -205,14 +228,15 @@ def transcript_summary(filepath, context, output_path):
                 thinking_config=types.ThinkingConfig(thinking_budget=-1)),
         )
         summary = response.text
+        
+        output_dir = "./output/summaries/"
+        os.makedirs(output_dir, exist_ok=True)
 
-        # Ausgabepfad sicherstellen
-        os.makedirs(output_path, exist_ok=True)
-
-        # Dateinamen für die Summary ableiten
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
         base_name = os.path.splitext(os.path.basename(filepath))[0]
-        output_filename = f"{base_name}_summary.md"
-        output_filepath = os.path.join(output_path, output_filename)
+        
+        output_filename = f"summary_{timestamp}_{base_name}.md"
+        output_filepath = os.path.join(output_dir, output_filename)
 
         try:
             with open(output_filepath, 'w', encoding='utf-8') as f:
@@ -220,6 +244,6 @@ def transcript_summary(filepath, context, output_path):
             print(f"Zusammenfassung erfolgreich generiert und gespeichert: {output_filepath}")
         except Exception as e:
             print(f"Fehler beim Speichern der Datei: {e}")
-
+        
     except Exception as e:
         print(f"Fehler bei der KI-Anfrage: {e}")

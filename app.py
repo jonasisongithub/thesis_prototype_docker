@@ -10,20 +10,15 @@ st.set_page_config(
     menu_items=None
 )
 
-# Hintergrundbild und Logo laden und kodieren
+# Hintergrundbild laden und kodieren
 def get_base64_image(image_path):
-    try:
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode()
-    except FileNotFoundError:
-        st.error(f"Bilddatei nicht gefunden unter: {image_path}")
-        return ""
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
 
-# Pfade an neue Struktur angepasst (assets-Ordner)
-bg_base64 = get_base64_image("./assets/background_boxes.jpg")
-logo_base64 = get_base64_image("./assets/logo_gema.jpg")
+bg_base64 = get_base64_image("./pages/images/background_boxes.jpg")
+logo_base64 = get_base64_image("./pages/images/logo_gema.jpg")  # <-- LOGO hier laden
 
-# CSS für Hintergrund und Logo
+# CSS-Hintergrund anwenden
 st.markdown(
     f"""
     <style>
@@ -45,13 +40,6 @@ st.markdown(
     .logo-container img {{
         height: 10vh;
     }}
-
-    .start-button-container {{
-        display: flex;
-        justify-content: center;
-        margin-top: -15vh;
-        margin-bottom: 100vh;
-    }}
     </style>
 
     <div class="logo-container">
@@ -61,7 +49,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# HTML-Inhalt mit korrekter Schrift und Styling
+# HTML-Inhalt mit korrektem Styling
 components.html(
     f"""
     <div style="
@@ -99,11 +87,47 @@ components.html(
         <p><strong>Los geht’s – dein Wissen zählt!</strong></p>
     </div>
     """,
-    height=400,
+    height=600,
 )
+# Abstand zum weißen Kasten
+st.markdown("<div style='height: -35vh;'></div>", unsafe_allow_html=True)
 
-# Abstand zum Button
-st.markdown("<div style='height: -20vh;'></div>", unsafe_allow_html=True)
+# Button CSS & HTML
+st.markdown("""
+    <style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: -15vh;
+        margin-bottom: 100vh;
+    }
 
-if st.button("Interview starten", type="primary"):
-    st.switch_page("pages/1_About_You.py")
+    .start-link-button {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #cc0000;
+        color: white !important;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 20px;
+        height: 7vh;
+        width: 12vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .start-link-button:hover {
+        background-color: #a30000;
+        transform: scale(1.03);
+    }
+    </style>
+
+    <div class="button-container">
+        <a href="/userinterface_aboutyou" class="start-link-button">Interview starten</a>
+    </div>
+""", unsafe_allow_html=True)
