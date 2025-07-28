@@ -215,7 +215,7 @@ if st.session_state["ladephase_abgeschlossen"]:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="centered-button red-button" style="margin-top: 5vh; margin-bottom: 100vh;">', unsafe_allow_html=True)
+    st.markdown('<div class="centered-button red-button" style="margin-top: -100vh; margin-bottom: 100vh;">', unsafe_allow_html=True)
     if st.button("Zustimmen"):
         st.switch_page("pages/userinterface_interview.py")
     st.markdown('</div>', unsafe_allow_html=True)
