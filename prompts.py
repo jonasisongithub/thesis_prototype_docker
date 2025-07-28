@@ -178,7 +178,7 @@ def end_conversation(full_chat_history):
 
 def transcript_summary(filepath):
     """
-    Liest ein Transkript, generiert eine Zusammenfassung neuen Wissens 
+    Liest ein Transkript, generiert eine Zusammenfassung neuen Wissens
     und speichert diese als Markdown-Datei.
     """
     transcript_content = ""
@@ -229,14 +229,15 @@ def transcript_summary(filepath):
         )
         summary = response.text
         
-        output_dir = "./output/summaries/"
-        os.makedirs(output_dir, exist_ok=True)
+        output_base_path = "/interview_output"
+        summary_dir = os.path.join(output_base_path, "summaries")
+        os.makedirs(summary_dir, exist_ok=True)
 
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
         base_name = os.path.splitext(os.path.basename(filepath))[0]
         
         output_filename = f"summary_{timestamp}_{base_name}.md"
-        output_filepath = os.path.join(output_dir, output_filename)
+        output_filepath = os.path.join(summary_dir, output_filename)
 
         try:
             with open(output_filepath, 'w', encoding='utf-8') as f:
