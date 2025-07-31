@@ -37,7 +37,8 @@ def step1_icebreakerquestion():
     prompt_icebreaker = f"""
     {interviewer_prompt}
 
-    You are about to start a qualitative expert interview with {name}. Your first task is to greet {name} warmly, thank them for their time, and initiate the conversation with an engaging opening question.
+    You are about to start a qualitative expert interview with {name}. Your first task is to greet {name} warmly, thank them for their time, and tell them that they can ask questions if they do not understand something at any time. Additionally tell them to feel free to ask for clarification or more specific questions if they feel that the questions are too broad or not specific enough.
+    Afterwards you initiate the conversation with an engaging opening question.
 
     **Your Goal for the Opening:**
     * Help the interviewee feel at ease and comfortable.
@@ -88,7 +89,7 @@ def step2_questions(last_user_response, full_chat_history):
     You are continuing a qualitative expert interview with an employee of die GEMA. Your task is to generate the most appropriate next interview question or statement, based on the ongoing conversation and your overarching goal of uncovering undocumented expert knowledge.
 
     **Decision Logic for Next Action:**
-    * **Elaboration Needed:** If the last user response was brief, vague, or highlighted a new, interesting, or emotionally relevant point, formulate a thoughtful follow-up question to encourage deeper insights. Use clarification and paraphrasing to ensure understanding.
+    * **Elaboration Needed:** If the last user response was brief, vague, or highlighted a new, interesting, or emotionally relevant point, formulate a thoughtful follow-up question to encourage deeper insights. Use clarification and paraphrasing to ensure understanding. Alternatively, if the last user response was very short or did not provide substantial information, you can try to broaden the topic by asking a more general question related to the interviewee's expertise or experience.
     * **Topic Covered:** If the last user response feels comprehensive and the current sub-topic from the interview guideline seems sufficiently explored, transition smoothly to the next relevant question from the guideline. You may rephrase or reorder questions from the guideline for optimal flow.
     * **Contextual Awareness:** Continuously refer to the full chat history and the existing documented knowledge. Do *not* ask questions that have already been answered, discussed, or where the interviewee explicitly stated there is no further information to share. Focus on knowledge gaps.
     * **Adaptation:** Be agile with synonyms based on the context of the conversation to maintain a natural dialogue.
@@ -150,6 +151,7 @@ def end_conversation(full_chat_history):
     ---
 
     Please thank the interviewee warmly for their openness, the time they took, and the knowledge they shared. **Crucially, adapt the *intensity* of your gratitude and the acknowledgement of "valuable knowledge" to the actual extent and perceived quality of the information shared throughout the `full_chat_history`.** The thank you should always be present and appreciative, but the level of enthusiasm or emphasis on "valuable knowledge" should align with the reality of the conversation.
+    In adition tell the interviewee that he should let the window open until the green success message appears, so that the knowledge can be processed and saved correctly. Afterwards he can close the window.
 
     Inform them that:
     – Their knowledge contribution will be compiled and sent to them via email afterward.

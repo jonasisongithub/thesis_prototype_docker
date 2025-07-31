@@ -119,10 +119,10 @@ name = st.text_input("", placeholder="z.B. Max Mustermann")
 
 st.markdown("<div style='margin-top: 2vh;'></div>", unsafe_allow_html=True)
 st.markdown("<div style='margin-top: 5px; font-size: 20px; font-weight: bold; color: #3f4249; margin-bottom: -50px;'>Wie lautet deine Stellenbezeichnung bei der GEMA?</div>", unsafe_allow_html=True)
-position = st.text_input("", placeholder="z.B. Service Managerin im Second Level Support")
+position = st.text_input("", placeholder="z.B. Service Managerin im Second Level Support, Direktion MKS, im Kundenservice")
 
 st.markdown("<div style='margin-top: 2vh;'></div>", unsafe_allow_html=True)
-st.markdown("<div style='margin-top: 5px; font-size: 20px; font-weight: bold; color: #3f4249; margin-bottom: -50px;'>Zu welchen Themen wirst du besonders häufig von deinen Kolleginnen und Kollegen um Rat gefragt? Was sind deine Aufgaben bei der GEMA über die wir heute sprechen wollen? Gib uns hier gern möglichst viele Einblicke und Schlagwörter, um das Interview bestmöglich vorbereiten zu können.</div>", unsafe_allow_html=True)
+st.markdown("<div style='margin-top: 5px; font-size: 20px; font-weight: bold; color: #3f4249; margin-bottom: -50px;'>Zu welchen Themen wirst du besonders häufig von deinen Kolleginnen und Kollegen um Rat gefragt? Was sind Aufgaben, Prozesse oder Projekte bei der GEMA über die wir heute sprechen wollen? Gib uns hier gern möglichst viele Einblicke und Schlagwörter, um das Interview bestmöglich vorbereiten zu können.</div>", unsafe_allow_html=True)
 task = st.text_input("", placeholder="z.B. Mitgliederservice im Second Level Support, Fragen zu Detailaufstellungen, Reklamationen Live-U")
 
 

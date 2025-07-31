@@ -79,8 +79,8 @@ components.html(
         
         <p><strong>Willkommen zum Experteninterview-Tool</strong></p>
 
-        <p>Danke, dass du dir Zeit nimmst und dein Wissen teilst – es ist von unschätzbarem Wert!<br>
-        Dieses Tool unterstützt dich dabei, dein Fachwissen einfach und strukturiert weiterzugeben. Ziel ist es, wertvolles Erfahrungswissen von Mitarbeitenden wie dir zu erfassen, zu dokumentieren und für andere im Unternehmen zugänglich zu machen.</p>
+        <p>Danke, dass du dir Zeit nimmst und dein Wissen teilst – Dieses ist für uns von unschätzbarem Wert!<br>
+        Dieses Tool unterstützt dich dabei, dein Fachwissen einfach und strukturiert weiterzugeben. Ziel ist es, wertvolles Erfahrungswissen von Mitarbeitenden wie dir zu erfassen, zu dokumentieren und für andere Kolleginnen und Kollegen zugänglich zu machen.</p>
 
         <p>Ob Methoden, Prozesse, Tipps aus der Praxis oder spezielle Fachkenntnisse – dein Beitrag hilft, unser gemeinsames Wissen nachhaltig zu sichern und die Zusammenarbeit zu stärken.</p>
 

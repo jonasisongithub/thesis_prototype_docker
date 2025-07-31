@@ -6,10 +6,7 @@ import json
 from datetime import datetime
 import os
 
-# WICHTIG: Prüfung, ob die Session-Variablen existieren.
-# Wenn nicht, wird der Nutzer zur Startseite zurückgeleitet.
 if "name" not in st.session_state or st.session_state.name == "":
-    # Je nachdem, wie deine Startseite heißt. app.py ist der Standard.
     st.switch_page("app.py")
 
 
@@ -31,8 +28,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
     menu_items=None
 )
-
-# --- Initialize messages and intro question at the very beginning ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
     intro_message = step1_icebreakerquestion()
@@ -40,7 +35,6 @@ if "messages" not in st.session_state:
 
 if "intro_displayed_once" not in st.session_state:
     st.session_state.intro_displayed_once = False
-# --- End initialization ---
 
 
 # background image and logo loading
@@ -172,7 +166,7 @@ st.markdown(
     <div class="explanation-box">
         <p>Willkommen zu diesem Interview!</p>
         <p>Dir werden gleich Fragen gestellt, die du einfach über die <b>Eingabezeile</b> beantworten kannst. Es gibt dabei kein Richtig oder Falsch, sondern es geht vor allem um deine Erfahrungen, deine Sichtweisen und dein Wissen!</p>
-        <p>Du kannst das Interview jederzeit pausieren oder beenden. Zum Beenden drücke entweder den "Beenden"-Button oben links verwenden oder gib im Gespräch den Hinweis, dass du das Interview gern beenden möchtest.</p>
+        <p>Du kannst das Interview jederzeit pausieren oder beenden. Zum Beenden verwende entweder den "Beenden"-Button oben links oder gib im Gespräch den Hinweis, dass du das Interview gern beenden möchtest.</p>
     </div>
     """,
     unsafe_allow_html=True
@@ -288,7 +282,7 @@ if "end_session_triggered" in st.session_state and st.session_state.end_session_
 
     transcript_summary(filename)
 
-    time.sleep(2)
+    time.sleep(0.5)
 
     #Success message
     st.session_state.clear()
