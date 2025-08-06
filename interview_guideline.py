@@ -44,6 +44,7 @@ def generate_interview_guideline(position, topic, context):
     Begin now.""",
 
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
     step1_sammeln = response.text
@@ -82,6 +83,7 @@ def generate_interview_guideline(position, topic, context):
     """,
 
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
     step2_pruefen= response.text
@@ -119,6 +121,7 @@ def generate_interview_guideline(position, topic, context):
     """,
 
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
     step3_sortieren= response.text
@@ -152,6 +155,7 @@ def generate_interview_guideline(position, topic, context):
     Begin now.""",
 
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
     step4_subsumieren= response.text

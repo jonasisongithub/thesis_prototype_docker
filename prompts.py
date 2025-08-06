@@ -117,6 +117,7 @@ def step2_questions(last_user_response, full_chat_history):
     model=CHOSEN_MODEL,
     contents=prompt_question,
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
    
@@ -170,6 +171,7 @@ def end_conversation(full_chat_history):
     model=CHOSEN_MODEL,
     contents=prompt_ending,
     config=types.GenerateContentConfig(
+        temperature=1.1,
         thinking_config=types.ThinkingConfig(thinking_budget=300)),
     )
    
@@ -227,6 +229,7 @@ def transcript_summary(filepath):
             model=CHOSEN_MODEL,
             contents= prompt_summary,
             config=types.GenerateContentConfig(
+                temperature=1.1,
                 thinking_config=types.ThinkingConfig(thinking_budget=-1)),
         )
         summary = response.text
