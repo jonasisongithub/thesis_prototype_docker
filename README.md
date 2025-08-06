@@ -52,26 +52,11 @@ Thesis title: "Large Language Models zur Wissensgewinnung: Durchführung von KI-
 ## How to deploy on GCP
 
 1. Login to GCP console and open the cloud shell
-2. Create fine-grained personal access token for your Github Account
-3. git clone https://github.com/jonasisongithub/Thesis_Prototype.git
-4. Authenticate with username and Access Token
-5. Create an virtual environment within the correct path "python3 -m venv nameofthevenv and activate it with source name/bin/activate
-6. Install all the required libraries with pip install -r requirements.txt from the repository
-7. Export needed information:   export GCP_PROJECT='aviapi' 
-                                export GCP_REGION='us-central1' 
-                                export AR_REPO='gemini_mtgcalc-repo' 
-                                export SERVICE_NAME='gemini-mtgcalc-streamlit-app' 
-                                gcloud artifacts repositories create "$AR_REPO" --location="$GCP_REGION" --repositoryformat=Docker gcloud auth configure-docker "$GCP_REGION-docker.pkg.dev" 
-                                gcloud builds submit --tag "$GCP_REGIONdocker.pkg.dev/$GCP_PROJECT/$AR_REPO/$SERVICE_NAME" 
-                                gcloud run deploy "$SERVICE_NAME"
-                                \ 
-                                --port=8080 \ 
-                                --image="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT/$AR_REPO/$SERVICE_NAME" \ 
-                                --allow-unauthenticated \ 
-                                --region=$GCP_REGION \ 
-                                --platform=managed \ 
-                                --project=$GCP_PROJECT \ 
-                                --set-env-vars=GCP_PROJECT=$GCP_PROJECT,GCP_REGION=$GCP_REGION
+2. Create new Docker Artifact in GCP Artifact registry and copy path
+3. Cloud console: docker build -t path/CHOOSE_NAME:v01 .
+4. Cloud console: docker push path/CHOOSE_NAME:v01
+5. Go to Google Cloud Rund and start a new service by selscting correct image from artifact registry
+6. Attach a GCP Bucket as volume and mount it with mount-path /interview_output --> You'll find all summaries and transcripts in this bucket
 
 
 ## Getting Started
